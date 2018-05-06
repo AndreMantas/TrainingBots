@@ -1,6 +1,6 @@
 # TrainingBots
 
-## Create a simple webchat page
+## Create and deploy simple webchat page connected to your bot
 
 Creata a new `index.html`file with this sample:
 
