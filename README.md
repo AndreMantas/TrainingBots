@@ -37,3 +37,8 @@ For example, in FileZilla:
 - Password: `userPWD`
 
 Navigate to `/site/wwwroot` and copy the index.html file (delete the existing html file)
+
+
+---
+
+For more ways to embbed the webchat check: https://github.com/Microsoft/BotFramework-WebChat
