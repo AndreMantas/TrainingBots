@@ -1,6 +1,8 @@
 # TrainingBots
 
-## Simple webchat page
+## Create a simple webchat page
+
+Creata a new `index.html`file with this sample:
 
     <!DOCTYPE html>
     <html>
@@ -20,3 +22,18 @@
         </script>
       </body>
     </html>
+
+Note that you need to edit two settings:
+
+- `direct_line_secret`: Secret from Direct Line channel
+- `botid`: Is the `Bot handle` of your bot
+
+Deploy your index.html file to `/site/wwwroot` using your favorite FTP client and the publish profile you got from Azure (check the FTP profile section and not the Web Deploy one).
+For example, in FileZilla:
+
+- Host: `publishUrl`
+- Logon type: Normal
+- User: `userName`
+- Password: `userPWD`
+
+Navigate to `/site/wwwroot` and copy the index.html file (delete the existing html file)
