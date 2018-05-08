@@ -1,31 +1,44 @@
 ﻿using System;
+using System.Configuration;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
-using Microsoft.Bot.Connector;
+using Microsoft.Bot.Builder.Luis;
+using Microsoft.Bot.Builder.Luis.Models;
 
 namespace LusoBook.Dialogs
 {
     [Serializable]
-    public class RootDialog : IDialog<object>
+    public class RootDialog : LuisDialog<object>
     {
-        public Task StartAsync(IDialogContext context)
+        public RootDialog() : base(new LuisService(new LuisModelAttribute(
+            ConfigurationManager.AppSettings["LuisAppId"],
+            ConfigurationManager.AppSettings["LuisAPIKey"],
+            domain: ConfigurationManager.AppSettings["LuisAPIHostName"])))
         {
-            context.Wait(MessageReceivedAsync);
-
-            return Task.CompletedTask;
         }
 
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
+        [LuisIntent("None")]
+        public async Task NoneIntent(IDialogContext context, LuisResult result)
         {
-            var activity = await result as Activity;
+            await this.ShowLuisResult(context, result);
+        }
 
-            // Calculate something for us to return
-            int length = (activity.Text ?? string.Empty).Length;
+        [LuisIntent("FindFlight")]
+        public async Task FindFlightIntent(IDialogContext context, LuisResult result)
+        {
+            await this.ShowLuisResult(context, result);
+        }
 
-            // Return our reply to the user
-            await context.PostAsync($"You sent {activity.Text} which was {length} characters");
+        [LuisIntent("FindHotel")]
+        public async Task FindHotelIntent(IDialogContext context, LuisResult result)
+        {
+            await this.ShowLuisResult(context, result);
+        }
 
-            context.Wait(MessageReceivedAsync);
+        private async Task ShowLuisResult(IDialogContext context, LuisResult result)
+        {
+            await context.PostAsync($"You have reached {result.Intents[0].Intent}. You said: {result.Query}");
+            context.Wait(MessageReceived);
         }
     }
 }
