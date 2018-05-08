@@ -67,7 +67,6 @@ namespace LusoBook.Services
                     _hotels.Add(new Hotel()
                     {
                         Name = $"{city.Name} Hotel {i + 1}",
-                        HasPool = rand.Next(2) == 0,
                         Rate = Math.Round(rand.NextDouble() * 5, 2),
                         City = city,
                         Image = images[imageIndex],

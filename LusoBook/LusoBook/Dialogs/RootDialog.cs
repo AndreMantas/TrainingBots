@@ -37,12 +37,41 @@ namespace LusoBook.Dialogs
             await this.ShowLuisResult(context, result);
         }
 
+        #region FindHotel
+
         [LuisIntent("FindHotel")]
         public async Task FindHotelIntent(IDialogContext context, LuisResult result)
         {
             var hotels = _service.GetHotels();
+
+            if (result.TryFindEntity("Location", out EntityRecommendation location))
+            {
+                hotels = FilterByLocation(hotels, location.Entity);
+
+                if (hotels.Count == 0)
+                {
+                    await context.PostAsync("Desculpe mas não tenho hoteis na localização " + location.Entity);
+                    context.Wait(this.MessageReceived);
+                    return;
+                }
+            }
+
             await ShowHotels(context, hotels);
             context.Wait(OnHotelSelected);
+        }
+
+        private List<Hotel> FilterByLocation(List<Hotel> hotels, string location)
+        {
+            if (string.IsNullOrWhiteSpace(location))
+            {
+                return hotels;
+            }
+
+            location = location.ToLowerInvariant();
+            return hotels
+                    .Where(x => x.City.Name.ToLowerInvariant().Contains(location) ||
+                                x.City.Country.Name.ToLowerInvariant().Contains(location))
+                    .ToList();
         }
 
         private async Task OnHotelSelected(IDialogContext context, IAwaitable<IMessageActivity> result)
@@ -71,15 +100,6 @@ namespace LusoBook.Dialogs
             await ShowCarousel(context, attatchments, "Encontramos estes hoteis");
         }
 
-        private static async Task ShowCarousel(IDialogContext context, List<Attachment> attachments, string msg = "")
-        {
-            var message = context.MakeMessage();
-            message.Text = msg;
-            message.AttachmentLayout = "carousel";
-            message.Attachments = attachments;
-            await context.PostAsync(message);
-        }
-
         private static Attachment BuildHotelAttatchment(Hotel h)
         {
             return new HeroCard()
@@ -91,10 +111,31 @@ namespace LusoBook.Dialogs
             }.ToAttachment();
         }
 
+        #endregion
+
+        #region Generic
+
+        private static async Task ShowCarousel(IDialogContext context, List<Attachment> attachments, string msg = "")
+        {
+            var message = context.MakeMessage();
+            message.Text = msg;
+            message.AttachmentLayout = "carousel";
+            message.Attachments = attachments;
+            await context.PostAsync(message);
+        }
+
         private async Task ShowLuisResult(IDialogContext context, LuisResult result)
         {
             await context.PostAsync($"You have reached {result.Intents[0].Intent}. You said: {result.Query}");
+
+            foreach (var entity in result.Entities)
+            {
+                await context.PostAsync($"Got this entity: {entity.Type} => {entity.Entity}");
+            }
+
             context.Wait(MessageReceived);
         }
+
+        #endregion
     }
 }
