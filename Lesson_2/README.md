@@ -126,7 +126,7 @@ Now, for example, in the `FindHotelIntent` let's show all available hotels:
     var message = context.MakeMessage();
     message.Text = "We found these hotels:";
     message.AttachmentLayout = "carousel";
-    message.Attachments = attachments;
+    message.Attachments = attatchments;
     await context.PostAsync(message);
 
     context.Wait(MessageReceived);
