@@ -60,7 +60,7 @@ namespace LusoBook.Dialogs
             context.Wait(OnHotelSelected);
         }
 
-        private List<Hotel> FilterByLocation(List<Hotel> hotels, string location)
+        private static List<Hotel> FilterByLocation(List<Hotel> hotels, string location)
         {
             if (string.IsNullOrWhiteSpace(location))
             {

@@ -37,34 +37,24 @@ namespace LusoBook.Services
 
         private void BuildStaticData()
         {
-            _countries = new List<Country>()
-            {
-                new Country { Name = "Portugal" },
-                new Country { Name = "Espanha" },
-                new Country { Name = "França" },
-            };
+            _countries = GetStaticCountries();
 
-            _cities = new List<City>()
-            {
-                new City() { Name = "Lisboa", Country = _countries[0] },
-                new City() { Name = "Porto", Country = _countries[0] },
+            _cities = GetStaticCities(_countries);
 
-                new City() { Name = "Madrid", Country = _countries[1] },
-                new City() { Name = "Barcelona", Country = _countries[1] },
+            _hotels = GetStaticHotels(_cities);
+        }
 
-                new City() { Name = "Paris", Country = _countries[2] },
-                new City() { Name = "Marselha", Country = _countries[2] },
-            };
-
+        private static List<Hotel> GetStaticHotels(List<City> cities)
+        {
             var images = BuildImages();
             var imageIndex = 0;
-            _hotels = new List<Hotel>();
-            foreach (var city in _cities)
+            var hotels = new List<Hotel>();
+            foreach (var city in cities)
             {
                 var numHotels = rand.Next(4) + 1;
                 for (int i = 0; i < numHotels; i++)
                 {
-                    _hotels.Add(new Hotel()
+                    hotels.Add(new Hotel()
                     {
                         Name = $"{city.Name} Hotel {i + 1}",
                         Rate = Math.Round(rand.NextDouble() * 5, 2),
@@ -74,9 +64,35 @@ namespace LusoBook.Services
                     imageIndex = (imageIndex + 1) % images.Length;
                 }
             }
+            return hotels;
         }
 
-        private string[] BuildImages()
+        private static List<City> GetStaticCities(List<Country> countries)
+        {
+            return new List<City>()
+            {
+                new City() { Name = "Lisboa", Country = countries[0] },
+                new City() { Name = "Porto", Country = countries[0] },
+
+                new City() { Name = "Madrid", Country = countries[1] },
+                new City() { Name = "Barcelona", Country = countries[1] },
+
+                new City() { Name = "Paris", Country = countries[2] },
+                new City() { Name = "Marselha", Country = countries[2] },
+            };
+        }
+
+        private static List<Country> GetStaticCountries()
+        {
+            return new List<Country>()
+            {
+                new Country { Name = "Portugal" },
+                new Country { Name = "Espanha" },
+                new Country { Name = "França" },
+            };
+        }
+
+        private static string[] BuildImages()
         {
             return new string[]
             {
