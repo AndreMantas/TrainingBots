@@ -173,3 +173,19 @@ The `FilterByLocation` method can simply check if the location that the user typ
 Now we just need to make sure that our LUIS app is well trained and will be able to extract the Location entity correctly from any sentence that the user types.
 
 You can extend this logic to any property that your model can be filtered so you can show the results that the user wants to see.
+
+---
+
+## Deploy our bot to Azure
+
+- Create a new web app bot in Azure. The bot template does not matter.
+
+- Note down the `MicrosoftAppId` and `MicrosoftAppPassword` and use them in the respective web.config properties.
+
+- Download the publish profile of the generated App Service resource.
+
+- In Visual Studio right click in your project and choose Publish. Import the downloaded publish profile and publish.
+
+- Now your bot is alive and can be reached by the available channels. 
+
+- Review Lesson_1 to see how to connect a channel (e.g., directline) to a bot and deploya simple webchat connected to your bot.
